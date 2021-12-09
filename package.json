@@ -1,5 +1,5 @@
 {
-  "name": "goit-react-hw-04-hooks-images",
+  "name": "goit-react-hw-03-image-finder",
   "homepage": ".",
   "version": "0.1.0",
   "private": true,
@@ -12,7 +12,10 @@
     "prop-types": "^15.7.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-icons": "^4.3.1",
+    "react-loader-spinner": "^4.0.0",
     "react-scripts": "4.0.3",
+    "react-scroll": "^1.8.4",
     "web-vitals": "^1.1.2"
   },
   "scripts": {
