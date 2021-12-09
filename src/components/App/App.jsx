@@ -1,74 +1,60 @@
-import React, { Component } from 'react';
+import { useState } from 'react';
 import Loader from 'react-loader-spinner';
 import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
-import fetchImages from '../API/fetchImages';
+import fetchImages from '../../API/fetchImages';
 import Searchbar from '../Searchbar/';
 import ImageGallery from '../ImageGallery';
 import Button from '../Button';
 import Modal from '../Modal';
 import s from './App.module.css';
 
-export default class App extends Component {
-  state = {
-    page: 1,
-    query: '',
-    total: 0,
-    collection: [],
-    loading: false,
-    largeURL: '',
-  };
+export default function App() {
+  const [page, setPage] = useState(1);
+  const [query, setQuery] = useState('');
+  const [total, setTotal] = useState(0);
+  const [collection, setCollection] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [largeURL, setLargeURL] = useState('');
 
-  handleSubmit = async e => {
-    if (!e.target[1].value) return;
+  const handleSubmit = async e => {
+    const tempQuery = e.target[1].value;
+    if (!tempQuery) return;
     e.preventDefault();
-    this.setState({ loading: true });
-    const res = await fetchImages(e.target[1].value, 1);
-    this.setState({
-      page: 1,
-      total: res.total,
-      query: e.target[1].value,
-      collection: res.hits,
-      loading: false,
-    });
+    setLoading(true);
+    const res = await fetchImages(tempQuery, 1);
+    setPage(1);
+    setTotal(res.total);
+    setQuery(tempQuery);
+    setCollection(res.hits);
+    setLoading(false);
   };
 
-  handleLoadMore = async e => {
+  const handleLoadMore = async e => {
     e.preventDefault();
-    this.setState({ loading: true });
-    const res = await fetchImages(this.state.query, this.state.page + 1);
-    this.setState(prevState => ({
-      page: prevState.page + 1,
-      collection: [...prevState.collection, ...res.hits],
-      loading: false,
-    }));
+    setLoading(true);
+    const res = await fetchImages(query, page + 1);
+    setPage(prevPage => prevPage + 1);
+    setCollection(prevCollection => [...prevCollection, ...res.hits]);
+    setLoading(false);
   };
 
-  handleImageMaximize = ({ target }) =>
-    this.setState({ largeURL: target.dataset.large });
+  const handleImageMaximize = e => setLargeURL(e.target.dataset.large);
 
-  handleCloseModal = () => this.setState({ largeURL: '' });
+  const handleCloseModal = () => setLargeURL('');
 
-  render() {
-    const { total, collection, loading, largeURL } = this.state;
-    return (
-      <div className={s.app}>
-        <Searchbar onSubmit={this.handleSubmit} />
-        <ImageGallery
-          collection={collection}
-          onMaximize={this.handleImageMaximize}
-        />
-        {loading && (
-          <div className={s.loaderWrapper}>
-            <Loader type="Rings" color="#00BFFF" height={120} width={120} />
-          </div>
-        )}
-        {collection.length > 0 && total > collection.length && (
-          <Button handleClick={this.handleLoadMore} />
-        )}
-        {largeURL && (
-          <Modal imageURL={largeURL} closeModal={this.handleCloseModal} />
-        )}
-      </div>
-    );
-  }
+  return (
+    <div className={s.app}>
+      <Searchbar onSubmit={handleSubmit} />
+      <ImageGallery collection={collection} onMaximize={handleImageMaximize} />
+      {loading && (
+        <div className={s.loaderWrapper}>
+          <Loader type="Rings" color="#00BFFF" height={120} width={120} />
+        </div>
+      )}
+      {collection.length > 0 && total > collection.length && (
+        <Button handleClick={handleLoadMore} />
+      )}
+      {largeURL && <Modal imageURL={largeURL} closeModal={handleCloseModal} />}
+    </div>
+  );
 }
