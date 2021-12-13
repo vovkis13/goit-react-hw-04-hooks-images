@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Loader from 'react-loader-spinner';
 import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
-import fetchImages from '../../API/fetchImages';
+import fetchImages from '../../api/fetchImages';
 import Searchbar from '../Searchbar/';
 import ImageGallery from '../ImageGallery';
 import Button from '../Button';
@@ -17,9 +17,12 @@ export default function App() {
   const [largeURL, setLargeURL] = useState('');
 
   const handleSubmit = async e => {
-    const tempQuery = e.target[1].value;
-    if (!tempQuery) return;
     e.preventDefault();
+    const tempQuery = e.target[1].value;
+    if (!tempQuery) {
+      this.setState({ collection: [] });
+      return;
+    }
     setLoading(true);
     const res = await fetchImages(tempQuery, 1);
     setPage(1);
@@ -51,7 +54,7 @@ export default function App() {
           <Loader type="Rings" color="#00BFFF" height={120} width={120} />
         </div>
       )}
-      {collection.length > 0 && total > collection.length && (
+      {!loading && collection.length > 0 && total > collection.length && (
         <Button handleClick={handleLoadMore} />
       )}
       {largeURL && <Modal imageURL={largeURL} closeModal={handleCloseModal} />}

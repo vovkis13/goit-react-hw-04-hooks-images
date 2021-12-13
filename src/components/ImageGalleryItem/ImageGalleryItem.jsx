@@ -19,6 +19,11 @@ export default function ImageGalleryItem({ image, onMaximize }) {
 }
 
 ImageGalleryItem.propTypes = {
-  image: PropTypes.object.isRequired,
+  image: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    webformatURL: PropTypes.string.isRequired,
+    largeImageURL: PropTypes.string.isRequired,
+    tags: PropTypes.string,
+  }).isRequired,
   onMaximize: PropTypes.func.isRequired,
 };

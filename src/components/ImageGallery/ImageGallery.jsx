@@ -12,6 +12,7 @@ export default function ImageGallery({ collection, onMaximize }) {
     </ul>
   );
 }
+
 ImageGallery.propTypes = {
   collection: PropTypes.array.isRequired,
   onMaximize: PropTypes.func.isRequired,

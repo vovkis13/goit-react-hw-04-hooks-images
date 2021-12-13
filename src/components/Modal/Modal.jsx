@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import s from './Modal.module.css';
+
 export default function Modal({ imageURL, closeModal }) {
   const handleKeyDown = e => e.code === 'Escape' && closeModal();
 
