@@ -20,7 +20,7 @@ export default function App() {
     e.preventDefault();
     const tempQuery = e.target[1].value;
     if (!tempQuery) {
-      this.setState({ collection: [] });
+      setCollection([]);
       return;
     }
     setLoading(true);
@@ -57,7 +57,13 @@ export default function App() {
       {!loading && collection.length > 0 && total > collection.length && (
         <Button handleClick={handleLoadMore} />
       )}
-      {largeURL && <Modal imageURL={largeURL} closeModal={handleCloseModal} />}
+      {largeURL && (
+        <Modal
+          imageURL={largeURL}
+          forAlt={query}
+          closeModal={handleCloseModal}
+        />
+      )}
     </div>
   );
 }

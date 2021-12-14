@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import s from './Modal.module.css';
 
-export default function Modal({ imageURL, closeModal }) {
+export default function Modal({ imageURL, forAlt, closeModal }) {
   const handleKeyDown = e => e.code === 'Escape' && closeModal();
 
   useEffect(() => {
@@ -13,7 +13,7 @@ export default function Modal({ imageURL, closeModal }) {
   return (
     <div className={s.overlay} onClick={closeModal}>
       <div className={s.modal}>
-        <img className={s.image} src={imageURL} alt="" />
+        <img className={s.image} src={imageURL} alt={'large ' + forAlt} />
       </div>
     </div>
   );
@@ -21,5 +21,6 @@ export default function Modal({ imageURL, closeModal }) {
 
 Modal.propTypes = {
   imageURL: PropTypes.string.isRequired,
+  forAlt: PropTypes.string,
   closeModal: PropTypes.func.isRequired,
 };
