@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import Loader from 'react-loader-spinner';
-import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 import fetchImages from '../../api/fetchImages';
 import Searchbar from '../Searchbar/';
 import ImageGallery from '../ImageGallery';
 import Button from '../Button';
 import Modal from '../Modal';
+import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 import s from './App.module.css';
 
 export default function App() {
@@ -24,21 +24,31 @@ export default function App() {
       return;
     }
     setLoading(true);
-    const res = await fetchImages(tempQuery, 1);
-    setPage(1);
-    setTotal(res.total);
-    setQuery(tempQuery);
-    setCollection(res.hits);
-    setLoading(false);
+    try {
+      const { total, hits } = await fetchImages(tempQuery, 1);
+      setPage(1);
+      setTotal(total);
+      setQuery(tempQuery);
+      setCollection(hits);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleLoadMore = async e => {
     e.preventDefault();
     setLoading(true);
-    const res = await fetchImages(query, page + 1);
-    setPage(prevPage => prevPage + 1);
-    setCollection(prevCollection => [...prevCollection, ...res.hits]);
-    setLoading(false);
+    try {
+      const { hits } = await fetchImages(query, page + 1);
+      setPage(prevPage => prevPage + 1);
+      setCollection(prevCollection => [...prevCollection, ...hits]);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleImageMaximize = e => setLargeURL(e.target.dataset.large);

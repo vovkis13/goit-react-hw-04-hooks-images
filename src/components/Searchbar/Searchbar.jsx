@@ -6,8 +6,6 @@ import s from './Searchbar.module.css';
 export default function Searchbar({ onSubmit }) {
   const [query, setQuery] = useState('');
 
-  const handleChange = e => setQuery(e.target.value);
-
   return (
     <header className={s.searchbar}>
       <form className={s.searchForm} onSubmit={onSubmit}>
@@ -22,7 +20,7 @@ export default function Searchbar({ onSubmit }) {
           autoComplete="off"
           autoFocus
           placeholder="Search images and photos"
-          onChange={handleChange}
+          onChange={e => setQuery(e.target.value)}
         />
       </form>
     </header>
